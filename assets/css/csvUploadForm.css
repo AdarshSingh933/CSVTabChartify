@@ -1,0 +1,19 @@
+.container{
+    height: 64vh;
+    width: 100%;
+    display: flex;
+    background-color: antiquewhite;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    margin-top: 40px;
+}
+.input-container{
+    height: 78px;
+    width: 600px;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 38px;
+}

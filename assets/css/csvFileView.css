@@ -1,0 +1,12 @@
+.d-flex{
+    position: relative;
+    left: 1036px;
+}
+.pagination ul{
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+}
+.pagination ul li{
+    margin: 4px;
+}

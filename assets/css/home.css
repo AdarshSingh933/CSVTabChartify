@@ -1,0 +1,12 @@
+.upload{
+    height: 46px;
+    display: flex;
+    align-items: center;
+}
+.upload>a{
+    position: absolute;
+    right: 16px
+}
+.upload>a>button{
+    background-color: skyblue;
+}

@@ -1,0 +1,134 @@
+<link rel="stylesheet" href="/css/csvFileView.css">
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" id="searchInput" type="search" placeholder="Search" aria-label="Search">
+      </form>
+    </div>
+  </nav>
+  <h4>Page <%= currentPage %></h4>
+  <table class="table table-bordered">
+    <thead>
+        <tr>
+            <% for (let header of headers) { %>
+                <th scope="col" class="sortable-header">
+                    <%= header %>
+                    <button class="sort-button" data-column="<%= header %>">&#8597;</button>
+                </th>
+            <% } %>
+        </tr>
+    </thead>
+    
+    <tbody>
+        <% if (headers.length > 0) { %>
+
+            <% // Render CSV file content with the corresponding headers %>
+            <% for (let row of data) { %>
+                <tr>
+                    <% // Dynamically render table data based on the headers %>
+                    <% for (let header of headers) { %>
+                        <td data-column="<%= header %>">
+                            <% if (row[header] !== undefined) { %>
+                                <%= row[header] %>
+                            <% } %>
+                        </td>
+                    <% } %>
+                </tr>
+            <% } %>
+        <% } %>
+            
+    </tbody>
+</table>
+  <!-- Add this code to display pagination controls -->
+  <div class="pagination">
+    <p>pages</p>
+    <ul class="pagination-list">
+      <% for (let i = 1; i <= totalPages; i++) { %>
+        <li class="<%= i === currentPage ? 'active' : '' %>">
+          <a href="/view-file?file=<%= requestedFilePath%>&&page=<%= i %>"><%= i %></a>
+        </li>
+      <% } %>
+    </ul>
+  </div>
+
+<script>
+   // Function to attach event listeners for sorting and searching
+   console.log('javascript code loaded');
+function attachEventListeners() {
+  const table = document.querySelector('table');
+  const headers = table.querySelectorAll('.sortable-header');
+  const dataRows = Array.from(table.querySelectorAll('tbody tr'));
+
+  headers.forEach(header => {
+   
+    header.addEventListener('click', () => {
+        console.log('header clicked');
+      const column = header.querySelector('.sort-button').getAttribute('data-column');
+      console.log("column",column);
+
+      // Toggle sorting direction between ascending (1) and descending (-1)
+      const direction = header.classList.contains('ascending') ? -1 : 1;
+      console.log('direction',direction);
+
+      // Sort data rows based on the selected column and direction
+      dataRows.sort((rowA, rowB) => {
+        const cellA = rowA.querySelector(`td[data-column="${column}"]`);
+        const cellB = rowB.querySelector(`td[data-column="${column}"]`);
+        
+
+        if (!cellA || !cellB) {
+          return 0; // Treat them as equal
+        }
+
+        const valueA = cellA.textContent;
+        const valueB = cellB.textContent;
+      
+
+
+        if (valueA < valueB) return -1 * direction;
+        if (valueA > valueB) return 1 * direction;
+        return 0;
+      });
+
+      // Remove existing rows from the table
+      dataRows.forEach(row => table.tBodies[0].removeChild(row));
+
+      // Append sorted rows back to the table
+      dataRows.forEach(row => table.tBodies[0].appendChild(row));
+
+      // Toggle sorting direction class
+      headers.forEach(header => header.classList.remove('ascending', 'descending'));
+      header.classList.toggle(direction === 1 ? 'ascending' : 'descending');
+    });
+  });
+
+  // Get references to the input field and table body
+  const searchInput = document.getElementById('searchInput');
+  const tableBody = document.querySelector('tbody');
+
+  // Listen for changes in the input field
+  searchInput.addEventListener('input', function () {
+    const searchTerm = this.value.toLowerCase(); // Get the search term and convert to lowercase
+
+    // Loop through each row in the table
+    dataRows.forEach(row => {
+      const rowData = Array.from(row.children).map(cell => cell.textContent.toLowerCase()); // Get the text content of each cell in lowercase
+
+      // Check if any of the cell content contains the search term
+      if (rowData.some(cellContent => cellContent.includes(searchTerm))) {
+        row.style.display = ''; // Show the row if it contains the search term
+      } else {
+        row.style.display = 'none'; // Hide the row if it doesn't contain the search term
+      }
+    });
+  });
+}
+
+// Attach event listeners when the document is ready
+document.addEventListener('DOMContentLoaded', () => {
+  attachEventListeners();
+});
+
+</script>
+
+

@@ -1,0 +1,12 @@
+<link rel="stylesheet" href="/css/csvUploadForm.css">
+<form action="/upload-csv/<%= user._id %>" method="post" id="uploadForm" enctype="multipart/form-data">
+  <div class="container">
+    <h3>CSV UPLOAD FILE</h3>
+    <div class="input-container">
+      <input type="file" id="csvFile" name="csv-file" accept=".csv">
+      <button type="submit">Upload CSV</button>
+    </div>
+  </div>
+  </form>
+  <script src="/js/home.js"></script>
+  

@@ -1,0 +1,31 @@
+<link rel="stylesheet" href="/css/home.css">
+<% if(locals.user) {%>
+   <div class="Upload"><a href="/upload-csv/form"><button>Upload CSV</button></a></div>
+<% } %>
+<table class="table table-success table-striped">
+  <thead>
+    <tr>
+      <th scope="col">S.No</th>
+      <th scope="col">Name</th>
+      <th scope="col">Email</th>
+      <th scope="col">CSV-File</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% let i = 1 %>
+    <% for (let user of users) { %>
+    <tr>
+        <th scope="row"><%= i %></th>
+        <td><%= user.name %></td>
+        <td><%= user.email %></td>
+        <td>
+            <% for (let file of user.uploads) { %>
+              <a href="/view-file?file=<%= file %>&type=csv" target="_blank"><%= file %></a><br>
+            <% } %>
+        </td>
+    </tr>
+    <% i++ %>
+    <% } %>
+</tbody>
+
+</table>
