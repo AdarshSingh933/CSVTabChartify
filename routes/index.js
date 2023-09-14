@@ -6,8 +6,6 @@ const homeController = require('../controllers/home.controller');
 
 router.get('/',homeController.home);
 router.use('/user',require('./user'));
-router.get('/upload-csv/form',homeController.csvForm);
-router.post('/upload-csv/:id',homeController.uploads);
-router.get('/view-file',homeController.viewFile);
+router.use('/csv',require('./csv'));
 
 module.exports = router;

@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="/css/home.css">
 <% if(locals.user) {%>
-   <div class="Upload"><a href="/upload-csv/form"><button>Upload CSV</button></a></div>
+   <div class="Upload"><a href="/csv/upload-csv/form"><button>Upload CSV</button></a></div>
 <% } %>
 <table class="table table-success table-striped">
   <thead>
@@ -20,7 +20,7 @@
         <td><%= user.email %></td>
         <td>
             <% for (let file of user.uploads) { %>
-              <a href="/view-file?file=<%= file %>&type=csv" target="_blank"><%= file %></a><br>
+              <a href="/csv/view-file?file=<%= file %>&type=csv" target="_blank"><%= file %></a><br>
             <% } %>
         </td>
     </tr>

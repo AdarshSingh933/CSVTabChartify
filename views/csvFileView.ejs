@@ -1,4 +1,7 @@
 <link rel="stylesheet" href="/css/csvFileView.css">
+<!--include google chart library-->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
 <nav class="navbar bg-body-tertiary">
     <div class="container-fluid">
       <form class="d-flex" role="search">
@@ -11,9 +14,10 @@
     <thead>
         <tr>
             <% for (let header of headers) { %>
-                <th scope="col" class="sortable-header">
+                <th scope="col" data-column="<%= header %>" class="sortable-header">
                     <%= header %>
-                    <button class="sort-button" data-column="<%= header %>">&#8597;</button>
+                    <button class="sort-button" data-column="<%= header %>" data-order="asc">&#8593;</button>
+                    <button class="chart-button" data-column="<%= header %>">Chart</button>
                 </th>
             <% } %>
         </tr>
@@ -39,36 +43,97 @@
             
     </tbody>
 </table>
+  <!--  chart container where the chart will be rendered. -->
+  <div id="chartContainer"></div>
+
   <!-- Add this code to display pagination controls -->
   <div class="pagination">
     <p>pages</p>
     <ul class="pagination-list">
       <% for (let i = 1; i <= totalPages; i++) { %>
         <li class="<%= i === currentPage ? 'active' : '' %>">
-          <a href="/view-file?file=<%= requestedFilePath%>&&page=<%= i %>"><%= i %></a>
+          <a href="/csv/view-file?file=<%= requestedFilePath%>&&page=<%= i %>"><%= i %></a>
         </li>
       <% } %>
     </ul>
   </div>
 
 <script>
+  // Define the data variable in the global scope to make it accessible
+
+  // Function to render a column chart
+  function renderColumnChart(column, dataRows,headers) {
+  google.charts.load('current', { packages: ['corechart'] });
+  google.charts.setOnLoadCallback(drawChart);
+
+  function drawChart() {
+    console.log("drawchart");
+    const chartData = new google.visualization.DataTable();
+    chartData.addColumn('string', 'Category');
+    chartData.addColumn('number', 'Value');
+
+    // Find the index of the selected column based on data-column attribute
+    console.log("headers",headers);
+    const columnIndex = headers.findIndex(header => {
+    return header.getAttribute('data-column') === column;
+  });
+    console.log("columnIndex",columnIndex);
+
+    // Prepare the chart data from the selected column
+    dataRows.forEach(row => {
+      console.log("row", row);
+      console.log("column", column);
+      console.log("cellData",row.cells[columnIndex]);
+      // Use the columnIndex to retrieve the cell data
+      const cellData = row.cells[columnIndex].textContent;
+      console.log("cellData", cellData);
+
+      // Check if cellData is a valid number before adding it to the chart
+      if (!isNaN(parseFloat(cellData))) {
+        chartData.addRow([column, parseFloat(cellData)]);
+      }
+    });
+
+    console.log("charData", chartData);
+
+    const options = {
+      title: `Column Chart for ${column}`,
+      bars: 'vertical',
+    };
+
+    const chart = new google.visualization.ColumnChart(document.getElementById('chartContainer'));
+    chart.draw(chartData, options);
+  }
+}
+
+// ...
+
+  
    // Function to attach event listeners for sorting and searching
-   console.log('javascript code loaded');
-function attachEventListeners() {
+  function attachEventListeners() {
   const table = document.querySelector('table');
-  const headers = table.querySelectorAll('.sortable-header');
+  const headers = Array.from(table.querySelectorAll('.sortable-header'));
   const dataRows = Array.from(table.querySelectorAll('tbody tr'));
 
   headers.forEach(header => {
-   
-    header.addEventListener('click', () => {
-        console.log('header clicked');
+
+    // Attach click event to the chart button
+    const chartButton = header.querySelector('.chart-button');
+    if (chartButton) {
+      const column = header.querySelector('.chart-button').getAttribute('data-column');
+      chartButton.addEventListener('click', () => {
+        renderColumnChart(column,dataRows,headers);
+      });
+    }
+    const sortButton = header.querySelector('.sort-button');
+    sortButton.addEventListener('click', () => {
       const column = header.querySelector('.sort-button').getAttribute('data-column');
-      console.log("column",column);
 
       // Toggle sorting direction between ascending (1) and descending (-1)
       const direction = header.classList.contains('ascending') ? -1 : 1;
-      console.log('direction',direction);
+     
+       // Update the arrow direction based on the sorting order
+       sortButton.innerHTML = direction === 1 ? '&#8593;' : '&#8595;';
 
       // Sort data rows based on the selected column and direction
       dataRows.sort((rowA, rowB) => {
