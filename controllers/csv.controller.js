@@ -1,5 +1,7 @@
 const User = require('../models/userSchema');
 const path = require('path');
+const csv = require('csv-parser');
+const fs = require('fs');
 
 module.exports.csvForm = async function(req,res){
     return res.render('csvUploadForm');
@@ -7,34 +9,30 @@ module.exports.csvForm = async function(req,res){
 
 module.exports.uploads = async function(req, res){
    
-        try{
-            let user = await User.findById(req.params.id);
-            User.uploadedCSV(req, res, function(err){
-                if (err) {console.log('*****Multer Error: ', err)}
-            
-                if (req.file){
-                    // this is saving the path of the uploaded file into the avatar field in the user
-                    let filePath = User.uploadPath + '/' + req.file.filename;
-                    user.uploads.push(filePath);
-                }
-                user.save();
-                return res.redirect('/');
-            });
+  try{
+      let user = await User.findById(req.params.id);
+      User.uploadedCSV(req, res, function(err){
+          if (err) {console.log('*****Multer Error: ', err)}
+      
+          if (req.file){
+              // this is saving the path of the uploaded file into the avatar field in the user
+              let filePath = User.uploadPath + '/' + req.file.filename;
+              user.uploads.push(filePath);
+          }
+          user.save();
+          return res.redirect('/');
+      });
 
-        }catch(err){
-            return res.redirect('back');
-        }
-    }
+  }catch(err){
+      return res.redirect('back');
+  }
+}
 
 const ITEMS_PER_PAGE = 100; // Number of items per page
 
 module.exports.viewFile = function (req, res) {
     const requestedFilePath = req.query.file;
     const filePath = path.join(__dirname, '..', requestedFilePath);
-
-  // Read the CSV file and extract headers
-  const csv = require('csv-parser');
-  const fs = require('fs');
 
   // Check if the file exists
   if (!fs.existsSync(filePath)) {
@@ -74,3 +72,5 @@ module.exports.viewFile = function (req, res) {
       });
     });
 };
+
+
