@@ -5,34 +5,25 @@
     google.charts.setOnLoadCallback(drawChart);
   
     function drawChart() {
-      console.log("drawchart");
       const chartData = new google.visualization.DataTable();
       chartData.addColumn('string', 'Category');
       chartData.addColumn('number', 'Value');
   
       // Find the index of the selected column based on data-column attribute
-      console.log("headers",headers);
       const columnIndex = headers.findIndex(header => {
       return header.getAttribute('data-column') === column;
     });
-      console.log("columnIndex",columnIndex);
   
       // Prepare the chart data from the selected column
       dataRows.forEach(row => {
-        console.log("row", row);
-        console.log("column", column);
-        console.log("cellData",row.cells[columnIndex]);
         // Use the columnIndex to retrieve the cell data
         const cellData = row.cells[columnIndex].textContent;
-        console.log("cellData", cellData);
   
         // Check if cellData is a valid number before adding it to the chart
         if (!isNaN(parseFloat(cellData))) {
           chartData.addRow([column, parseFloat(cellData)]);
         }
       });
-  
-      console.log("charData", chartData);
   
       const options = {
         title: `Column Chart for ${column}`,
@@ -59,10 +50,12 @@
       if (chartButton) {
         const column = header.querySelector('.chart-button').getAttribute('data-column');
         chartButton.addEventListener('click', () => {
+          //calling renderColumnChart function 
           renderColumnChart(column,dataRows,headers);
         });
       }
       const sortButton = header.querySelector('.sort-button');
+       // Attach click event to the sort button
       sortButton.addEventListener('click', () => {
         const column = header.querySelector('.sort-button').getAttribute('data-column');
   
