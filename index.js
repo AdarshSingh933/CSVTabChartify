@@ -25,7 +25,7 @@ app.use(
             maxAge: 1000 * 60 * 100,
         },
         store: MongoStore.create({
-            mongoUrl: 'mongodb://127.0.0.1:27017/CSV-Application',
+            mongoUrl: 'mongodb+srv://adarshsingh933:iDF9W3SNmDzpDk4a@cluster0.a38g0f6.mongodb.net/CSV_Upload_App',
             autoRemove: 'disabled',
         }),
     })
