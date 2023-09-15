@@ -15,7 +15,7 @@ module.exports.uploads = async function(req, res){
           if (err) {console.log('*****Multer Error: ', err)}
       
           if (req.file){
-              // this is saving the path of the uploaded file into the avatar field in the user
+              // this is saving the path of the uploaded file into the uploads array field in the user
               let filePath = User.uploadPath + '/' + req.file.filename;
               user.uploads.push(filePath);
           }
@@ -27,7 +27,7 @@ module.exports.uploads = async function(req, res){
       return res.redirect('back');
   }
 }
-
+//pagination of the record only 100 record per page 
 const ITEMS_PER_PAGE = 100; // Number of items per page
 
 module.exports.viewFile = function (req, res) {
