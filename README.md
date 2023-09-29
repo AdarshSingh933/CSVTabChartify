@@ -54,7 +54,7 @@ User can visualize column data in chart and also can see data of different pages
 ![Screenshot (50)](https://github.com/AdarshSingh933/CSV_Upload_App/assets/130076154/3142de10-6446-4660-8d9e-daff5846a069)
 
 
-## Showing chart of data of clicked column
+## Showing Data Chart of clicked column
 
 ![Screenshot (51)](https://github.com/AdarshSingh933/CSV_Upload_App/assets/130076154/1703ac03-2c44-48f4-937c-6dcdcb18fb4b)
 
